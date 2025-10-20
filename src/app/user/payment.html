@@ -1,0 +1,149 @@
+<div class="space-y-6">
+  <!-- Page Title & Controls -->
+  <div class="flex justify-between items-center">
+    <div>
+      <h2 class="text-3xl font-bold text-gray-900">💰 Thông tin học phí</h2>
+      <p class="text-gray-600 mt-1">Theo dõi chi tiết học phí từng học kỳ và trạng thái thanh toán</p>
+    </div>
+    <div class="flex items-center space-x-4">
+      <select *ngIf="!showAllSemesters" 
+              class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
+              [(ngModel)]="selectedSemester" 
+              (change)="onSemesterChange()">
+        <option *ngFor="let semester of availableSemesters" [value]="semester.semester">
+          {{ semester.displayName }}
+        </option>
+      </select>
+      <button (click)="toggleView()" class="px-4 py-2 border-2 border-purple-600 text-purple-600 rounded-lg font-semibold hover:bg-purple-600 hover:text-white transition-all">
+        {{ showAllSemesters ? '📅 Xem theo học kỳ' : '📊 Xem tất cả' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+    <p class="text-red-700">⚠️ {{ error }}</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-12">
+    <p class="text-gray-500 text-lg">⏳ Đang tải dữ liệu...</p>
+  </div>
+
+  <!-- Single Semester View -->
+  <div *ngIf="!loading && !showAllSemesters && paymentInfo" class="space-y-6">
+    <!-- Payment Summary Card -->
+    <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-8 border border-purple-200/50 shadow-lg">
+      <div class="flex justify-between items-start mb-6">
+        <h4 class="text-2xl font-bold text-gray-900">{{ paymentInfo.semesterDisplayName }}</h4>
+        <span class="px-4 py-2 rounded-full text-sm font-semibold" [ngClass]="getStatusBadgeClass(paymentInfo.paymentStatus)">
+          {{ getStatusText(paymentInfo.paymentStatus) }}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white/70 rounded-xl p-4">
+          <p class="text-sm text-gray-600 mb-1">💰 Tổng học phí</p>
+          <p class="text-2xl font-bold text-gray-900">{{ formatCurrency(paymentInfo.totalAmount) }}</p>
+        </div>
+        <div class="bg-white/70 rounded-xl p-4">
+          <p class="text-sm text-gray-600 mb-1">✅ Đã thanh toán</p>
+          <p class="text-2xl font-bold text-green-600">{{ formatCurrency(paymentInfo.paidAmount) }}</p>
+        </div>
+        <div class="bg-white/70 rounded-xl p-4">
+          <p class="text-sm text-gray-600 mb-1">⏳ Còn lại</p>
+          <p class="text-2xl font-bold text-orange-600">{{ formatCurrency(paymentInfo.remainingAmount) }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="paymentInfo.paymentDate" class="text-sm text-gray-700 mb-4">
+        📅 Ngày thanh toán: {{ paymentInfo.paymentDate | date:'dd/MM/yyyy HH:mm' }}
+      </div>
+
+      <div *ngIf="paymentInfo.canCreatePayment">
+        <button (click)="createPayment(paymentInfo.semester)" 
+                class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all">
+          🏦 Tạo yêu cầu thanh toán
+        </button>
+      </div>
+    </div>
+
+    <!-- Course Details Table -->
+    <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+      <h4 class="text-xl font-bold text-gray-900 mb-4">📚 Chi tiết môn học</h4>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã môn</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên môn học</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tín chỉ</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Học phí</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let course of paymentInfo.paymentDetails" class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ course.courseCode }}</td>
+              <td class="px-6 py-4 text-sm text-gray-900">{{ course.courseName }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ course.credit }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{{ formatCurrency(course.fee) }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  ENROLLED
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Semesters View -->
+  <div *ngIf="!loading && showAllSemesters" class="space-y-6">
+    <div *ngFor="let payment of allPaymentInfo" class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
+      <div class="flex justify-between items-start mb-4">
+        <h4 class="text-xl font-bold text-gray-900">{{ payment.semesterDisplayName }}</h4>
+        <span class="px-4 py-2 rounded-full text-sm font-semibold" [ngClass]="getStatusBadgeClass(payment.paymentStatus)">
+          {{ getStatusText(payment.paymentStatus) }}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-sm text-gray-600 mb-1">💰 Tổng học phí</p>
+          <p class="text-xl font-bold text-gray-900">{{ formatCurrency(payment.totalAmount) }}</p>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-sm text-gray-600 mb-1">✅ Đã thanh toán</p>
+          <p class="text-xl font-bold text-green-600">{{ formatCurrency(payment.paidAmount) }}</p>
+        </div>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-sm text-gray-600 mb-1">⏳ Còn lại</p>
+          <p class="text-xl font-bold text-orange-600">{{ formatCurrency(payment.remainingAmount) }}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="text-sm text-gray-600">
+          <span *ngIf="payment.paymentDate">📅 {{ payment.paymentDate | date:'dd/MM/yyyy' }}</span>
+          <span class="ml-4">📚 {{ payment.paymentDetails.length }} môn học</span>
+        </div>
+        <button *ngIf="payment.canCreatePayment" 
+                (click)="createPayment(payment.semester)" 
+                class="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+          🏦 Tạo yêu cầu thanh toán
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && (!paymentInfo || (showAllSemesters && allPaymentInfo.length === 0))" 
+       class="text-center py-12 bg-white rounded-xl border border-gray-200">
+    <div class="text-6xl mb-4">💰</div>
+    <h4 class="text-xl font-bold text-gray-900 mb-2">Chưa có thông tin học phí</h4>
+    <p class="text-gray-600">Bạn chưa đăng ký môn học nào hoặc chưa có thông tin học phí.</p>
+  </div>
+</div>

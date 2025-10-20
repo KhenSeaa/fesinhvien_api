@@ -1,0 +1,71 @@
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900">📅 Thời khóa biểu giảng dạy</h2>
+            <p class="text-gray-600 mt-1">Lịch dạy học và quản lý lớp học</p>
+        </div>
+        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" [(ngModel)]="selectedSemester" (change)="onSemesterChange()">
+            <option *ngFor="let semester of availableSemesters" [value]="semester.semester">
+                {{ semester.displayName }}
+            </option>
+        </select>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-12">
+        <p class="text-gray-500 text-lg">⏳ Đang tải dữ liệu...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+        <p class="text-red-700">⚠️ {{ error }}</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && classes.length === 0" class="text-center py-12 bg-white rounded-xl border border-gray-200">
+        <div class="text-6xl mb-4">📭</div>
+        <p class="text-gray-600 text-lg">Chưa có lớp học nào được phân công</p>
+    </div>
+
+    <!-- Timetable -->
+    <div *ngIf="!loading && classes.length > 0" class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+        <h4 class="text-xl font-bold text-gray-900 mb-4">Lịch dạy học tuần này</h4>
+        
+        <div class="timetable-grid">
+            <!-- Day headers -->
+            <div class="timetable-corner"></div>
+            <div class="timetable-day-header" *ngFor="let d of days" [style.gridColumn]="(d.index + 1)" [style.gridRow]="1">
+                {{ d.label }}
+            </div>
+
+            <!-- Period labels and background slots -->
+            <ng-container *ngFor="let p of periods; let r = index">
+                <!-- Left time/period column -->
+                <div class="timetable-period" [style.gridRow]="(r + 2)" [style.gridColumn]="1">
+                    <div class="period-number">Tiết {{ p }}</div>
+                    <div class="period-time">{{ getPeriodTime(p) }}</div>
+                    <div class="period-session" [class.morning]="p <= 5" [class.afternoon]="p >= 6">
+                        {{ p <= 5 ? 'Sáng' : 'Chiều' }}
+                    </div>
+                </div>
+
+                <!-- Background slots for each day -->
+                <div class="timetable-slot" *ngFor="let d of days" [style.gridRow]="(r + 2)" [style.gridColumn]="(d.index + 1)"></div>
+            </ng-container>
+
+            <!-- Event blocks -->
+            <div class="timetable-event" *ngFor="let e of events"
+                 [style.gridColumn]="(e.dayIndex + 1)"
+                 [style.gridRow]="(e.start + 1) + ' / ' + (e.end + 1)"
+                 [style.borderLeftColor]="e.color">
+                <div class="event-title">{{ e.title }}</div>
+                <div class="event-meta">
+                    <span>⏰ {{ getPeriodTime(e.start) }} - {{ getPeriodTime(e.end - 1, true) }}</span>
+                    <span *ngIf="e.room">🏢 {{ e.room }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,43 @@
+/* Login page background image theme */
+.login-bg {
+  position: relative;
+  min-height: 100vh;
+  /* Try absolute first, then relative as a fallback in case of base-href issues */
+  background-color: #111; /* subtle fallback color while image loads */
+}
+/* Optional dark overlay for readability */
+.login-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0,0,0,0.25);
+}
+/* Background image as a fixed full-screen layer to cover body's gradient */
+.login-bg::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  /* Prefer /assets (from src/assets), fallback to /images (from public/) */
+  background-image:
+    url('/assets/login-bg.webp'),
+    url('/assets/images/login-bg.webp'),
+    url('/assets/login-bg.jpg'),
+    url('/assets/images/login-bg.jpg'),
+    url('/assets/login-bg.png'),
+    url('/assets/images/login-bg.png'),
+    url('/images/login-bg.webp'),
+    url('/images/login-bg.jpg'),
+    url('/images/login-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+/* Ensure inner content appears above overlay */
+.login-bg > * { position: relative; z-index: 2; }
+
+/* If supported, remove global body gradient when login is present */
+body:has(.login-bg) {
+  background: #000 !important;
+}

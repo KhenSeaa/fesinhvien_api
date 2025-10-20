@@ -1,0 +1,35 @@
+<!-- Nút nổi -->
+<button class="chat-fab" (click)="toggleChat()" [attr.aria-label]="'Open ' + headerTitle" [class.left]="position==='left'" [class.right]="position!=='left'">
+  <img *ngIf="iconUrl; else emojiIcon" [src]="iconUrl" alt="chat icon" class="fab-img" />
+  <ng-template #emojiIcon>
+    <span class="fab-icon">{{ icon }}</span>
+  </ng-template>
+  <span class="fab-label">{{ label }}</span>
+  <span class="fab-pulse"></span>
+</button>
+
+<!-- Hộp chat -->
+<div class="chat-box" *ngIf="isOpen" [style.width]="width" [style.height]="height" [class.left]="position==='left'">
+  <div class="chat-header">
+    <div class="title">{{ headerTitle }}</div>
+    <button class="close-btn" (click)="toggleChat()" aria-label="Đóng">×</button>
+  </div>
+
+  <div class="chat-messages" #messagesContainer>
+    <div *ngFor="let msg of messages" class="msg" [ngClass]="msg.role">
+      <div class="bubble">
+        <div class="name" *ngIf="msg.role==='bot'">{{ label }}</div>
+        <div class="name" *ngIf="msg.role==='user'">Bạn</div>
+        <div class="text">{{ msg.text }}</div>
+      </div>
+    </div>
+    <div class="typing" *ngIf="isTyping">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+    </div>
+  </div>
+
+  <form class="chat-input" (ngSubmit)="send()">
+    <input [(ngModel)]="prompt" name="prompt" (keyup.enter)="send()" placeholder="Nhập tin nhắn..." autocomplete="off">
+    <button type="submit" class="send-btn">Gửi</button>
+  </form>
+</div>

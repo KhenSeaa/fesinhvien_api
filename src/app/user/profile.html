@@ -1,0 +1,119 @@
+<div class="space-y-6">
+  <!-- Page Title -->
+  <div class="flex justify-between items-center">
+    <h2 class="text-3xl font-bold text-gray-900">👤 Thông tin cá nhân</h2>
+  </div>
+
+  <!-- Error/Loading Messages -->
+  <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+    <p class="text-red-700">⚠️ {{ error }}</p>
+  </div>
+  <div *ngIf="loading" class="text-center py-12">
+    <p class="text-gray-500 text-lg">⏳ Đang tải dữ liệu...</p>
+  </div>
+
+  <!-- Profile Information -->
+  <div *ngIf="!loading && profile" class="space-y-6">
+    <!-- Profile Card -->
+    <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-8 border border-purple-200/50 shadow-lg">
+      <div class="flex items-center space-x-6 mb-6">
+        <div class="h-24 w-24 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+          {{ profile.fullName.charAt(0) || 'S' }}
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold text-gray-900">{{ profile.fullName }}</h3>
+          <p class="text-purple-700 font-semibold">Sinh viên</p>
+          <p class="text-gray-600">{{ profile.departmentName }}</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white/70 rounded-xl p-4">
+          <p class="text-sm text-gray-600 mb-1">🆔 Mã sinh viên</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile.studentCode }}</p>
+        </div>
+        <div class="bg-white/70 rounded-xl p-4">
+          <p class="text-sm text-gray-600 mb-1">📧 Email</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile.email }}</p>
+        </div>
+        <div class="bg-white/70 rounded-xl p-4">
+          <p class="text-sm text-gray-600 mb-1">📱 Số điện thoại</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile.phone || 'Chưa cập nhật' }}</p>
+        </div>
+        <div class="bg-white/70 rounded-xl p-4">
+          <p class="text-sm text-gray-600 mb-1">🏫 Lớp</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile.className }}</p>
+        </div>
+        <div class="bg-white/70 rounded-xl p-4">
+          <p class="text-sm text-gray-600 mb-1">🎓 Ngành học</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile.departmentName }}</p>
+        </div>
+        <div class="bg-white/70 rounded-xl p-4">
+          <p class="text-sm text-gray-600 mb-1">📅 Niên khóa</p>
+          <p class="text-lg font-semibold text-gray-900">{{ profile.year }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Change Section -->
+    <div class="bg-white rounded-2xl p-8 border border-gray-200 shadow-lg">
+      <div class="flex justify-between items-center mb-6">
+        <h4 class="text-xl font-bold text-gray-900">🔐 Bảo mật tài khoản</h4>
+        <button 
+          (click)="togglePasswordForm()"
+          class="px-4 py-2 rounded-lg border-2 border-purple-600 text-purple-600 font-semibold hover:bg-purple-600 hover:text-white transition-all duration-300">
+          {{ showPasswordForm ? 'Hủy' : 'Đổi mật khẩu' }}
+        </button>
+      </div>
+
+      <!-- Success/Error Messages -->
+      <div *ngIf="passwordMessage" class="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg mb-4">
+        <p class="text-green-700">✅ {{ passwordMessage }}</p>
+      </div>
+      <div *ngIf="passwordError" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-4">
+        <p class="text-red-700">⚠️ {{ passwordError }}</p>
+      </div>
+
+      <!-- Password Change Form -->
+      <div *ngIf="showPasswordForm" class="max-w-md space-y-4">
+        <div>
+          <label for="newPassword" class="block text-sm font-semibold text-gray-700 mb-2">Mật khẩu mới</label>
+          <input 
+            type="password" 
+            id="newPassword"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            [(ngModel)]="passwordRequest.newPassword"
+            placeholder="Nhập mật khẩu mới (ít nhất 6 ký tự)"
+            [disabled]="passwordLoading">
+        </div>
+
+        <div>
+          <label for="confirmPassword" class="block text-sm font-semibold text-gray-700 mb-2">Xác nhận mật khẩu mới</label>
+          <input 
+            type="password" 
+            id="confirmPassword"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            [(ngModel)]="passwordRequest.confirmPassword"
+            placeholder="Nhập lại mật khẩu mới"
+            [disabled]="passwordLoading">
+        </div>
+
+        <div class="flex space-x-3 pt-4">
+          <button 
+            (click)="changePassword()"
+            [disabled]="passwordLoading"
+            class="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 disabled:opacity-50">
+            <span *ngIf="passwordLoading">⏳ Đang xử lý...</span>
+            <span *ngIf="!passwordLoading">🔄 Cập nhật mật khẩu</span>
+          </button>
+          <button 
+            (click)="togglePasswordForm()"
+            [disabled]="passwordLoading"
+            class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-all duration-300 disabled:opacity-50">
+            Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

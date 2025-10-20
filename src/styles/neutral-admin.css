@@ -1,0 +1,73 @@
+/* =============================
+   Neutral Admin Theme Overrides
+   ============================= */
+
+/* Buttons: neutral palette and consistent sizes */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  height: 2.5rem;
+  padding: 0 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db; /* gray-300 */
+  background-color: #f9fafb; /* gray-50 */
+  color: #111827; /* gray-900 */
+  font-weight: 600;
+  line-height: 1;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+.btn:hover { background-color: #f3f4f6; /* gray-100 */ }
+.btn:focus { outline: none; box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.12); }
+.btn-sm { height: 2rem; padding: 0 0.625rem; }
+.btn-lg { height: 2.75rem; padding: 0 1rem; }
+.btn svg { width: 1rem; height: 1rem; }
+
+/* Intent variants (kept subtle/neutral) */
+.btn-primary { background-color: #111827; color: #ffffff; border-color: #111827; }
+.btn-primary:hover { background-color: #1f2937; border-color: #1f2937; }
+.btn-secondary { background-color: #e5e7eb; color: #111827; border-color: #d1d5db; }
+.btn-secondary:hover { background-color: #d1d5db; }
+.btn-success { background-color: #065f46; color: #ffffff; border-color: #065f46; }
+.btn-success:hover { background-color: #047857; border-color: #047857; }
+.btn-danger { background-color: #7f1d1d; color: #ffffff; border-color: #7f1d1d; }
+.btn-danger:hover { background-color: #991b1b; border-color: #991b1b; }
+.btn-info { background-color: #374151; color: #ffffff; border-color: #374151; }
+.btn-info:hover { background-color: #4b5563; border-color: #4b5563; }
+
+/* Admin-scoped neutral forms */
+.admin-theme .form input,
+.admin-theme .form select,
+.admin-theme .form textarea {
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  border: 1px solid #d1d5db !important; /* enforce neutral border */
+  border-radius: 0.5rem;
+  background-color: #ffffff !important;
+  color: #111827;
+}
+.admin-theme .form input:focus,
+.admin-theme .form select:focus,
+.admin-theme .form textarea:focus {
+  outline: none;
+  border-color: #9ca3af !important; /* gray-400 */
+  box-shadow: 0 0 0 2px rgba(156, 163, 175, 0.25);
+}
+
+/* Admin-scoped neutral tables/cards/badges */
+.admin-theme table thead { background-color: #f9fafb !important; }
+.admin-theme table th { color: #374151 !important; font-weight: 600; }
+.admin-theme .card,
+.admin-theme .panel,
+.admin-theme .admin-card,
+.admin-theme .bg-white\/95,
+.admin-theme .bg-white { background-color: #ffffff !important; }
+.admin-theme .border,
+.admin-theme [class*="border-"] { border-color: #e5e7eb !important; }
+.admin-theme .badge,
+.admin-theme .status-badge,
+.admin-theme .credit-badge { background-color: #f3f4f6 !important; color: #374151 !important; border: 1px solid #e5e7eb !important; border-radius: 9999px; padding: 0.125rem 0.5rem; font-size: 0.75rem; font-weight: 600; }
+
+/* Neutral page bg helper */
+.admin-theme-bg { background-color: #f9fafb !important; }

@@ -19,11 +19,24 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets"
               }
             ],
             "styles": [
-              "src/styles.css"
-            ]
+              "src/styles/tailwind.css",
+              "src/styles.css",
+              "src/styles/neutral-admin.css",
+              "src/styles/login.css"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules"
+              ]
+            }
           },
           "configurations": {
             "production": {
@@ -51,6 +64,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "buildTarget": "my-app:build:production"
@@ -75,11 +91,21 @@
               }
             ],
             "styles": [
-              "src/styles.css"
-            ]
+              "src/styles/tailwind.css",
+              "src/styles.css",
+              "src/styles/neutral-admin.css"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules"
+              ]
+            }
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

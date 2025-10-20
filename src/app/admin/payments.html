@@ -1,0 +1,341 @@
+<div class="space-y-6 animate-fade-in">
+    <!-- Page Header -->
+    <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-blue-200 p-6 hover:shadow-md transition-shadow duration-300">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-blue-800">💰 Quản lý học phí</h1>
+                    <p class="text-blue-600">Theo dõi, lọc trạng thái thanh toán và xuất báo cáo chi tiết</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-blue-200 p-6 hover:shadow-md transition-shadow duration-300 animate-slide-in">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-blue-700 mb-2">Trạng thái</label>
+                <select [(ngModel)]="statusFilter" (change)="onFilterChange()"
+                    class="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">Tất cả</option>
+                    <option value="PENDING">Chờ thanh toán</option>
+                    <option value="PAID">Đã thanh toán</option>
+                    <option value="FAILED">Thất bại</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-blue-700 mb-2">Học kỳ</label>
+                <select [(ngModel)]="semesterFilter" (change)="onFilterChange()"
+                    class="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">Tất cả</option>
+                    <option *ngFor="let semester of availableSemesters" [value]="semester.semester">
+                        {{ semester.displayName }}
+                    </option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-blue-700 mb-2">Tìm kiếm</label>
+                <input type="search" [(ngModel)]="searchTerm" (input)="onSearchChange()"
+                    placeholder="ID thanh toán, mã sinh viên..."
+                    class="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-blue-700 mb-2">&nbsp;</label>
+                <button (click)="exportPayments()" [disabled]="loading"
+                    class="w-full btn btn-primary">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>{{ loading ? 'Đang tải...' : 'Xuất CSV' }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards - Nhỏ gọn, text đầy đủ -->
+    <div *ngIf="statistics" class="grid grid-cols-2 md:grid-cols-4 gap-2 animate-scale-in">
+        <!-- Tổng -->
+        <div class="bg-white rounded-lg shadow border border-blue-200 p-2.5 hover:shadow-md transition-all">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <svg class="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-600 font-medium">Tổng thanh toán</p>
+                    <p class="text-lg font-bold text-blue-600">{{ statistics.totalPayments }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Đã thanh toán -->
+        <div class="bg-white rounded-lg shadow border border-green-200 p-2.5 hover:shadow-md transition-all">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <svg class="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-600 font-medium">Đã thanh toán</p>
+                    <p class="text-lg font-bold text-green-600">{{ statistics.paidPayments }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chờ thanh toán -->
+        <div class="bg-white rounded-lg shadow border border-yellow-200 p-2.5 hover:shadow-md transition-all">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                    <svg class="h-4 w-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-600 font-medium">Chờ thanh toán</p>
+                    <p class="text-lg font-bold text-yellow-600">{{ statistics.pendingPayments }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thất bại -->
+        <div class="bg-white rounded-lg shadow border border-red-200 p-2.5 hover:shadow-md transition-all">
+            <div class="flex items-center space-x-2">
+                <div class="h-8 w-8 bg-red-100 rounded-lg flex items-center justify-center">
+                    <svg class="h-4 w-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-600 font-medium">Thanh toán thất bại</p>
+                    <p class="text-lg font-bold text-red-600">{{ statistics.failedPayments }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div *ngIf="successMessage" class="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg animate-slide-in">
+        <p class="text-green-700">{{ successMessage }}</p>
+    </div>
+
+    <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg animate-slide-in">
+        <p class="text-red-700">{{ error }}</p>
+    </div>
+
+    <!-- Payments Table -->
+    <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-blue-200 overflow-hidden animate-slide-in-right">
+        <div class="px-6 py-4 border-b border-blue-200 flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-semibold text-blue-800">Danh sách thanh toán</h3>
+                <p *ngIf="filteredPayments.length" class="text-sm text-blue-600">Có {{ filteredPayments.length }} bản ghi</p>
+            </div>
+            <button (click)="loadPayments()" [disabled]="loading" class="btn btn-secondary text-sm">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                <span>Làm mới</span>
+            </button>
+        </div>
+
+        <div *ngIf="loading" class="flex justify-center items-center py-12">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <span class="ml-3 text-blue-600">Đang tải...</span>
+        </div>
+
+        <div *ngIf="!loading" class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-blue-200">
+                <thead class="bg-blue-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Sinh viên</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Học kỳ</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Ngày tạo</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Trạng thái</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wider">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-blue-200">
+                    <tr *ngFor="let payment of filteredPayments" class="hover:bg-blue-50 transition-colors duration-200">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-900">#{{ payment.id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-900">
+                            <div class="font-medium">{{ payment.studentCode || 'SV' + payment.studentId }}</div>
+                            <div class="text-xs text-blue-600">ID: {{ payment.studentId }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-900">{{ payment.semesterName || 'HK' + payment.semesterId }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-900">{{ formatDate(payment.paymentDate) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border {{ getStatusBadgeClass(payment.status) }}">
+                                {{ getStatusText(payment.status) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button (click)="openUpdateModal(payment)" class="btn btn-primary text-sm px-3 py-1">
+                                🔄 Cập nhật
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="filteredPayments.length === 0">
+                        <td colspan="6" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center">
+                                <svg class="h-12 w-12 text-blue-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-blue-500 text-lg">Không có thanh toán nào</p>
+                                <p class="text-blue-400 text-sm">Điều chỉnh bộ lọc và thử lại</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Update Status Modal -->
+<div *ngIf="showUpdateModal" class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 animate-fade-in" (click)="closeUpdateModal()">
+    <!-- Backdrop - Rất rất nhẹ 10% -->
+    <div class="fixed inset-0 bg-black/10 transition-opacity"></div>
+    
+    <!-- Modal Content -->
+    <div class="relative bg-white rounded-2xl shadow-2xl transform transition-all w-full max-w-3xl animate-scale-in" (click)="$event.stopPropagation()">
+        <!-- Modal Header -->
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 flex items-center justify-between rounded-t-2xl">
+            <div class="flex items-center space-x-3">
+                <div class="h-10 w-10 bg-white/20 rounded-lg flex items-center justify-center">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white">Cập nhật trạng thái thanh toán</h3>
+            </div>
+            <button (click)="closeUpdateModal()" 
+                class="text-white/80 hover:text-white hover:bg-white/20 p-2 rounded-lg transition-all duration-200">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Modal Body -->
+        <div class="px-6 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+
+                <!-- Loading State -->
+                <div *ngIf="loadingDetail" class="flex flex-col items-center py-8">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                    <p class="text-blue-600">⏳ Đang tải thông tin chi tiết...</p>
+                </div>
+
+                <!-- Payment Detail -->
+                <div *ngIf="!loadingDetail && selectedPaymentDetail" class="space-y-4">
+                    <!-- Basic Info -->
+                    <div class="bg-blue-50 rounded-lg p-4 space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-sm font-medium text-blue-700">ID thanh toán:</span>
+                            <span class="text-sm text-blue-900">#{{ selectedPaymentDetail.id }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm font-medium text-blue-700">Sinh viên:</span>
+                            <span class="text-sm text-blue-900">{{ selectedPaymentDetail.studentName }} ({{ selectedPaymentDetail.studentId }})</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm font-medium text-blue-700">Lớp:</span>
+                            <span class="text-sm text-blue-900">{{ selectedPaymentDetail.studentClass }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm font-medium text-blue-700">Học kỳ:</span>
+                            <span class="text-sm text-blue-900">{{ selectedPaymentDetail.semesterName }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm font-medium text-blue-700">Trạng thái hiện tại:</span>
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border {{ getStatusBadgeClass(selectedPaymentDetail.status) }}">
+                                {{ getStatusText(selectedPaymentDetail.status) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Course Details -->
+                    <div>
+                        <h5 class="text-sm font-semibold text-blue-800 mb-2">📚 Các học phần đã đăng ký</h5>
+                        <div class="overflow-x-auto border border-blue-200 rounded-lg">
+                            <table class="min-w-full divide-y divide-blue-200">
+                                <thead class="bg-blue-50">
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-blue-700">Mã môn</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-blue-700">Tên môn học</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-blue-700">Tín chỉ</th>
+                                        <th class="px-4 py-2 text-right text-xs font-medium text-blue-700">Học phí</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-blue-200">
+                                    <tr *ngFor="let course of selectedPaymentDetail.paymentDetails">
+                                        <td class="px-4 py-2 text-sm text-blue-900">{{ course.courseCode }}</td>
+                                        <td class="px-4 py-2 text-sm text-blue-900">{{ course.courseName }}</td>
+                                        <td class="px-4 py-2 text-sm text-blue-900">{{ course.credit }}</td>
+                                        <td class="px-4 py-2 text-sm text-blue-900 text-right">{{ formatCurrency(course.fee) }}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot class="bg-blue-50">
+                                    <tr>
+                                        <td colspan="3" class="px-4 py-2 text-sm font-bold text-blue-900">Tổng cộng:</td>
+                                        <td class="px-4 py-2 text-sm font-bold text-blue-900 text-right">{{ formatCurrency(selectedPaymentDetail.totalAmount) }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Update Form -->
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-blue-700 mb-2">Trạng thái mới:</label>
+                            <select [(ngModel)]="newStatus" class="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="PENDING">Chờ thanh toán</option>
+                                <option value="PAID">Đã thanh toán</option>
+                                <option value="FAILED">Thanh toán thất bại</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-blue-700 mb-2">Lý do (tùy chọn):</label>
+                            <textarea [(ngModel)]="updateReason" rows="3"
+                                placeholder="Nhập lý do thay đổi trạng thái..."
+                                class="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="bg-gradient-to-r from-gray-50 to-blue-50 px-6 py-4 flex items-center justify-end space-x-3 border-t border-blue-200 rounded-b-2xl">
+            <button (click)="closeUpdateModal()" [disabled]="updating"
+                class="btn btn-secondary px-6">
+                <svg class="inline h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                Hủy bỏ
+            </button>
+            <button (click)="updatePaymentStatusFromUI()" [disabled]="updating || !newStatus"
+                class="btn btn-primary px-6">
+                <svg *ngIf="!updating" class="inline h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <svg *ngIf="updating" class="inline h-4 w-4 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                <span *ngIf="!updating">Lưu thay đổi</span>
+                <span *ngIf="updating">Đang xử lý...</span>
+            </button>
+        </div>
+    </div>
+</div>

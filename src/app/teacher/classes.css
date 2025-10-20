@@ -1,0 +1,273 @@
+/* ===== Modern Timetable Styles ===== */
+.timetable-grid {
+    display: grid;
+    grid-template-columns: 120px repeat(7, 1fr);
+    grid-template-rows: 60px repeat(10, 80px);
+    gap: 2px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.8s ease-out;
+    position: relative;
+}
+
+.timetable-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 49%, rgba(59, 130, 246, 0.05) 50%, transparent 51%);
+    pointer-events: none;
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.timetable-corner {
+    grid-row: 1;
+    grid-column: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.corner-text {
+    text-align: center;
+    line-height: 1.2;
+}
+
+.timetable-day-header {
+    /* Đổi màu từ hồng sang xanh-lục phù hợp chủ đề giảng viên */
+    background: linear-gradient(135deg, #22c55e 0%, #14b8a6 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.day-label {
+    font-size: 0.875rem;
+    margin-bottom: 2px;
+}
+
+.day-date {
+    font-size: 0.75rem;
+    opacity: 0.9;
+}
+
+.timetable-period {
+    background: #f8fafc;
+    border-right: 1px solid #e2e8f0;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px;
+}
+
+.period-number {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.period-time {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.period-time.morning {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.period-time.afternoon {
+    background: #fed7aa;
+    color: #ea580c;
+}
+
+.timetable-slot {
+    background: #ffffff;
+    border-left: 1px solid #f1f5f9;
+    border-top: 1px solid #f1f5f9;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.timetable-slot:hover {
+    background: #f8fafc;
+}
+
+.timetable-event {
+    position: relative;
+    background: linear-gradient(145deg, #ffffff, #f8fafc);
+    border-left: 4px solid #3b82f6;
+    border-radius: 12px;
+    margin: 3px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    overflow: hidden;
+    animation: slideInUp 0.6s ease-out;
+}
+
+.timetable-event::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.timetable-event:hover::before {
+    left: 100%;
+}
+
+.timetable-event:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+    border-left-color: #1d4ed8;
+}
+
+@keyframes slideInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.event-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.event-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #1f2937;
+    line-height: 1.2;
+}
+
+.event-subtitle {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.event-meta {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.period-info {
+    background: #e5e7eb;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+.room-info {
+    font-weight: 500;
+}
+
+.credit-info {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+    .timetable-grid {
+        grid-template-columns: 80px repeat(7, 1fr);
+        grid-template-rows: 50px repeat(10, 60px);
+    }
+    
+    .timetable-event {
+        padding: 4px;
+        margin: 1px;
+    }
+    
+    .event-title {
+        font-size: 0.75rem;
+    }
+    
+    .event-meta {
+        font-size: 0.625rem;
+    }
+}
+
+/* ===== Animation Classes ===== */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+.animate-bounce-in {
+    animation: bounceIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ===== Loading Spinner ===== */
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

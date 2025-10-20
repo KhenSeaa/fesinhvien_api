@@ -1,0 +1,186 @@
+<div class="space-y-6 animate-fade-in">
+    <!-- Page Header -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="h-12 w-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Thời Khóa Biểu Cá Nhân</h1>
+                    <p class="text-gray-500">Lịch học và thông tin môn học</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <select [(ngModel)]="selectedSemester" (change)="onSemesterChange()" 
+                        class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option *ngFor="let semester of availableSemesters" [value]="semester.semester">
+                        {{ semester.displayName }}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading and Error States -->
+    <div *ngIf="loading" class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+        <div class="flex items-center justify-center">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+            <span class="ml-3 text-gray-600">Đang tải thời khóa biểu...</span>
+        </div>
+    </div>
+
+    <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div class="flex items-center">
+            <svg class="h-5 w-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-red-700">{{ error }}</span>
+        </div>
+    </div>
+
+    <!-- Student Info Summary -->
+    <div *ngIf="scheduleList.length > 0 && !loading" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="h-10 w-10 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                    <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Học kỳ</p>
+                    <p class="font-semibold text-gray-900">{{ selectedSemester }}</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <div class="h-10 w-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Tổng tín chỉ</p>
+                    <p class="font-semibold text-gray-900">{{ totalCredits }} tín chỉ</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <div class="h-10 w-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                    <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Số môn học</p>
+                    <p class="font-semibold text-gray-900">{{ scheduleList.length }} môn</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && scheduleList.length === 0" class="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
+        <div class="text-center">
+            <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2" *ngIf="isStudent">Chưa có môn học nào</h3>
+            <h3 class="text-lg font-medium text-gray-900 mb-2" *ngIf="!isStudent">Tài khoản chưa được xác nhận</h3>
+            <p class="text-gray-500 mb-6" *ngIf="isStudent">Bạn chưa đăng ký môn học nào trong học kỳ này.</p>
+            <p class="text-gray-500 mb-6" *ngIf="!isStudent">Tài khoản của bạn chưa được xác nhận là sinh viên. Vui lòng liên hệ quản trị viên để được hỗ trợ.</p>
+            <button (click)="goToRegistration()" *ngIf="isStudent"
+                    class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center space-x-2 mx-auto">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span>Đăng ký môn học</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Timetable -->
+    <div *ngIf="!loading && scheduleList.length > 0" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Lịch học tuần này</h3>
+        </div>
+        
+        <div class="p-6">
+            <div class="timetable-grid">
+                <!-- Day headers -->
+                <div class="timetable-corner">
+                    <div class="corner-text">Tiết / Thứ</div>
+                </div>
+                <div class="timetable-day-header" *ngFor="let d of days" [style.gridColumn]="(d.index + 1)" [style.gridRow]="1">
+                    <div class="day-label">{{ d.label }}</div>
+                    <div class="day-date">{{ d.date }}</div>
+                </div>
+
+                <!-- Period labels and background slots -->
+                <ng-container *ngFor="let p of periods; let r = index">
+                    <!-- Left time/period column -->
+                    <div class="timetable-period" [style.gridRow]="(r + 2)" [style.gridColumn]="1">
+                        <div class="period-number">Tiết {{ p }}</div>
+                        <div class="period-time">{{ getPeriodTime(p) }}</div>
+                        <div class="period-time" [class.morning]="p <= 5" [class.afternoon]="p >= 6">
+                            {{ p <= 5 ? 'Sáng' : 'Chiều' }}
+                        </div>
+                    </div>
+
+                    <!-- Background slots for each day -->
+                    <div class="timetable-slot" *ngFor="let d of days" [style.gridRow]="(r + 2)" [style.gridColumn]="(d.index + 1)"></div>
+                </ng-container>
+
+                <!-- Event blocks -->
+                <div class="timetable-event" *ngFor="let e of events"
+                     [style.gridColumn]="(e.dayIndex + 1)"
+                     [style.gridRow]="(e.start + 1) + ' / ' + (e.end + 1)"
+                     [style.borderLeftColor]="e.color"
+                     [title]="getEventTooltip(e)">
+                    <div class="event-content">
+                        <div class="event-title">{{ e.title }}</div>
+                        <div class="event-subtitle" *ngIf="e.lecturer">👨‍🏫 {{ e.lecturer }}</div>
+                        <div class="event-meta">
+                            <span class="period-info">⏰ {{ getPeriodTime(e.start) }} - {{ getPeriodTime(e.end - 1, true) }}</span>
+                            <span class="room-info" *ngIf="e.room">🏢 {{ e.room }}</span>
+                            <span class="credit-info">📚 {{ e.credit }} TC</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div *ngIf="scheduleList.length > 0" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Thao tác nhanh</h3>
+        <div class="flex flex-wrap gap-3">
+            <button (click)="goToGrades()" 
+                    class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center space-x-2">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Xem bảng điểm</span>
+            </button>
+            
+            <button (click)="goToRegistration()" 
+                    class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center space-x-2">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span>Đăng ký thêm môn</span>
+            </button>
+            
+            <button (click)="exportSchedule()" 
+                    class="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 flex items-center space-x-2">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span>Xuất thời khóa biểu</span>
+            </button>
+        </div>
+    </div>
+</div>

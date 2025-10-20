@@ -1,0 +1,121 @@
+<div class="space-y-6">
+  <!-- Page Title & Semester Select -->
+  <div class="flex justify-between items-center">
+    <div>
+      <h2 class="text-3xl font-bold text-gray-900">📚 Đăng ký môn học</h2>
+      <p class="text-gray-600 mt-1">Quản lý các môn đã đăng ký và lựa chọn học kỳ mong muốn</p>
+    </div>
+    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" [(ngModel)]="selectedSemester" (change)="onSemesterChange()">
+      <option *ngFor="let semester of availableSemesters" [value]="semester.semester">
+        {{ semester.displayName }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-12">
+    <p class="text-gray-500 text-lg">⏳ Đang tải dữ liệu...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+    <p class="text-red-700">⚠️ {{ error }}</p>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg">
+    <p class="text-green-700">✅ {{ successMessage }}</p>
+  </div>
+
+  <!-- Statistics -->
+  <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+      <div class="flex items-center space-x-4">
+        <div class="text-4xl">📚</div>
+        <div>
+          <p class="text-sm text-gray-600">Môn có thể đăng ký</p>
+          <p class="text-2xl font-bold text-gray-900">{{ getAvailableCoursesCount() }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+      <div class="flex items-center space-x-4">
+        <div class="text-4xl">✅</div>
+        <div>
+          <p class="text-sm text-gray-600">Môn đã hoàn thành</p>
+          <p class="text-2xl font-bold text-gray-900">{{ completedCourses.length }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+      <div class="flex items-center space-x-4">
+        <div class="text-4xl">📝</div>
+        <div>
+          <p class="text-sm text-gray-600">Môn đã đăng ký</p>
+          <p class="text-2xl font-bold text-gray-900">{{ enrolledCourses.length }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enrolled Courses -->
+  <div *ngIf="!loading && enrolledCourses.length > 0" class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <h4 class="text-xl font-bold text-gray-900 mb-4">📝 Môn đã đăng ký</h4>
+    <div class="space-y-3">
+      <div *ngFor="let course of enrolledCourses" class="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
+        <div class="flex-1">
+          <p class="font-semibold text-gray-900">{{ course.courseCode }} - {{ course.courseName }}</p>
+          <p class="text-sm text-gray-600">{{ course.credit }} tín chỉ</p>
+        </div>
+        <button *ngIf="course.canUnregister" 
+                (click)="confirmUnregister(course)" 
+                [disabled]="processing"
+                class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50">
+          {{ processing ? '⏳ Đang xử lý...' : '❌ Hủy đăng ký' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Available Courses -->
+  <div *ngIf="!loading && availableCourses.length > 0" class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <h4 class="text-xl font-bold text-gray-900 mb-4">📋 Môn học có thể đăng ký</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let course of availableCourses" class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+        <div class="flex justify-between items-start mb-3">
+          <h5 class="font-bold text-gray-900">{{ course.courseCode }}</h5>
+          <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">{{ course.credit }} TC</span>
+        </div>
+        <p class="text-gray-700 mb-3">{{ course.courseName }}</p>
+        <div class="space-y-2 text-sm text-gray-600 mb-4">
+          <p *ngIf="course.lecturerName">👨‍🏫 {{ course.lecturerName }}</p>
+          <p *ngIf="course.period && course.dayOfWeek">📅 {{ course.dayOfWeek }}, tiết {{ course.period }}</p>
+          <p *ngIf="course.classroom">🏫 {{ course.classroom }}</p>
+          <p *ngIf="course.availableSlots !== undefined && course.maxSlots !== undefined">👥 Slot: {{ course.availableSlots }}/{{ course.maxSlots }}</p>
+        </div>
+        <button *ngIf="course.canRegister" 
+                (click)="registerCourse(course.courseId)" 
+                [disabled]="processing"
+                class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50">
+          {{ processing ? '⏳ Đang xử lý...' : '➕ Đăng ký' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Data Message -->
+  <div *ngIf="!loading && availableCourses.length === 0 && enrolledCourses.length === 0" class="text-center py-12 bg-white rounded-xl border border-gray-200">
+    <div class="text-6xl mb-4">📭</div>
+    <p class="text-gray-600 text-lg">Không có môn học nào có thể đăng ký</p>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="flex space-x-4">
+    <button (click)="goToSchedule()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+      📅 Xem thời khóa biểu
+    </button>
+    <button (click)="goToGrades()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+      📊 Xem bảng điểm
+    </button>
+  </div>
+</div>

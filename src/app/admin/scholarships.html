@@ -1,0 +1,223 @@
+<div class="space-y-6 animate-fade-in">
+    <!-- Page Header -->
+    <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-yellow-200 p-6 hover:shadow-md transition-shadow duration-300">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="h-12 w-12 bg-yellow-600 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-yellow-800">🏆 Quản lý học bổng</h1>
+                    <p class="text-yellow-600">Theo dõi sinh viên đạt GPA >= 3.6 đủ điều kiện nhận học bổng</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Card -->
+    <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-yellow-200 p-6 hover:shadow-md transition-shadow duration-300 animate-slide-in">
+        <h4 class="text-lg font-semibold text-yellow-800 mb-4">🔍 Bộ lọc học bổng</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-yellow-700 mb-2">🏛️ Khoa</label>
+                <select [(ngModel)]="selectedDepartmentId" (change)="onFilterChange()"
+                    class="w-full px-3 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                    <option [value]="null">Tất cả khoa</option>
+                    <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-yellow-700 mb-2">📅 Học kỳ</label>
+                <select [(ngModel)]="selectedSemester" (change)="onFilterChange()"
+                    class="w-full px-3 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                    <option value="">Tất cả học kỳ</option>
+                    <option *ngFor="let semester of semesters" [value]="semester.semester">{{ semester.displayName || 'Kỳ ' + semester.semester }}</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-yellow-700 mb-2">🔍 Tìm kiếm</label>
+                <input type="search" [(ngModel)]="searchText" placeholder="Tìm sinh viên..."
+                    class="w-full px-3 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+            </div>
+
+            <div class="flex items-end space-x-2">
+                <button (click)="onFilterChange()" class="flex-1 btn btn-primary">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <span>Tìm</span>
+                </button>
+                <button *ngIf="hasActiveFilters()" (click)="resetFilters()" class="btn btn-secondary">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div *ngIf="statistics" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-scale-in">
+        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg shadow-sm border border-yellow-200 p-6 hover:shadow-md transition-all duration-300 hover:scale-105">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-yellow-600 font-medium">Ứng cử viên</p>
+                    <p class="text-3xl font-bold text-yellow-800">{{ statistics.totalCandidates }}</p>
+                </div>
+                <div class="h-12 w-12 bg-yellow-600 rounded-lg flex items-center justify-center">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-sm border border-blue-200 p-6 hover:shadow-md transition-all duration-300 hover:scale-105">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-blue-600 font-medium">GPA trung bình</p>
+                    <p class="text-3xl font-bold text-blue-800">{{ statistics.averageGPA | number:'1.2-2' }}</p>
+                </div>
+                <div class="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-sm border border-green-200 p-6 hover:shadow-md transition-all duration-300 hover:scale-105">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-green-600 font-medium">GPA cao nhất</p>
+                    <p class="text-3xl font-bold text-green-800">{{ statistics.topGPA | number:'1.2-2' }}</p>
+                </div>
+                <div class="h-12 w-12 bg-green-600 rounded-lg flex items-center justify-center">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow-sm border border-purple-200 p-6 hover:shadow-md transition-all duration-300 hover:scale-105">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-purple-600 font-medium">Đủ điều kiện</p>
+                    <p class="text-3xl font-bold text-purple-800">{{ statistics.totalEligibleForScholarship }}</p>
+                </div>
+                <div class="h-12 w-12 bg-purple-600 rounded-lg flex items-center justify-center">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex flex-col items-center justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mb-4"></div>
+        <p class="text-yellow-600">Đang tải danh sách học bổng...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+        <div class="flex items-center">
+            <svg class="h-5 w-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <p class="text-red-700">{{ error }}</p>
+        </div>
+    </div>
+
+    <!-- Results Table -->
+    <div *ngIf="!loading && !error && candidates.length > 0" class="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-yellow-200 overflow-hidden animate-slide-in-right">
+        <div class="px-6 py-4 border-b border-yellow-200 flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-semibold text-yellow-800">🎯 Danh sách sinh viên đủ điều kiện học bổng</h3>
+                <p class="text-sm text-yellow-600">{{ candidates.length }} sinh viên</p>
+            </div>
+            <button (click)="exportScholarshipList()" [disabled]="exporting"
+                class="btn btn-primary">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span>{{ exporting ? 'Đang xuất...' : 'Xuất CSV' }}</span>
+            </button>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-yellow-200">
+                <thead class="bg-yellow-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">#</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">👤 Sinh viên</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">🏢 Lớp</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">🏛️ Khoa</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">📊 GPA</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">📚 Tín chỉ</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-yellow-700 uppercase tracking-wider">✅ Hoàn thành</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-yellow-200">
+                    <tr *ngFor="let candidate of candidates; let i = index" class="hover:bg-yellow-50 transition-colors duration-200">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-yellow-900">{{ i + 1 }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-yellow-900">{{ candidate.fullName }}</div>
+                            <div class="text-xs text-yellow-600">{{ candidate.studentCode }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-900">{{ candidate.className }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-900">{{ candidate.departmentName }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                [class.bg-green-100]="candidate.gpa >= 3.6"
+                                [class.text-green-800]="candidate.gpa >= 3.6"
+                                [class.border-green-300]="candidate.gpa >= 3.6"
+                                [class.border]="candidate.gpa >= 3.6"
+                                [class.bg-yellow-100]="candidate.gpa >= 3.2 && candidate.gpa < 3.6"
+                                [class.text-yellow-800]="candidate.gpa >= 3.2 && candidate.gpa < 3.6"
+                                [class.border-yellow-300]="candidate.gpa >= 3.2 && candidate.gpa < 3.6"
+                                [class.bg-gray-100]="candidate.gpa < 3.2"
+                                [class.text-gray-800]="candidate.gpa < 3.2"
+                                [class.border-gray-300]="candidate.gpa < 3.2">
+                                {{ candidate.gpa | number:'1.2-2' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-yellow-900">{{ candidate.totalCredits }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                    <div class="bg-yellow-600 h-2 rounded-full" [style.width.%]="getCompletionRate(candidate)"></div>
+                                </div>
+                                <span class="text-xs text-yellow-600 whitespace-nowrap">
+                                    {{ candidate.completedCredits }}/{{ candidate.totalCredits }} ({{ getCompletionRate(candidate) | number:'1.0-0' }}%)
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- No Results State -->
+    <div *ngIf="!loading && !error && candidates.length === 0 && searchPerformed" class="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-yellow-200 p-12">
+        <div class="text-center">
+            <svg class="mx-auto h-12 w-12 text-yellow-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"></path>
+            </svg>
+            <h4 class="text-lg font-medium text-yellow-900 mb-2">Không có kết quả</h4>
+            <p class="text-yellow-600 mb-6">Không có sinh viên nào đạt yêu cầu GPA >= 3.6 trong điều kiện được chọn.</p>
+            <button (click)="resetFilters()" class="btn btn-primary">
+                🔄 Tìm kiếm lại
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,171 @@
+<div class="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-100">
+    <!-- Header - Fixed -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4 animate-fade-in">
+                    <div class="h-12 w-12 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <svg class="h-7 w-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                            Cổng Thông Tin Sinh Viên
+                        </h1>
+                        <p class="text-sm text-gray-600 flex items-center">
+                            <svg class="w-4 h-4 mr-1 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Quản lý học tập và thông tin cá nhân
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 animate-slide-in">
+                    <div class="text-right bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-2 rounded-lg border border-purple-200">
+                        <p class="text-sm font-semibold text-gray-900 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            Sinh viên
+                        </p>
+                        <p class="text-xs text-gray-600">{{ getCurrentUserEmail() }}</p>
+                    </div>
+                    <button (click)="logout()" class="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        <span>Đăng xuất</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-20">
+        <!-- Sidebar - Fixed -->
+        <aside class="fixed left-0 top-20 w-64 h-[calc(100vh-5rem)] bg-white/95 backdrop-blur-md shadow-xl border-r border-gray-200/50 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            <nav class="mt-8 px-4">
+                <div class="space-y-3">
+                    <!-- Student Dashboard -->
+                    <div class="mb-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-200/50">
+                        <h3 class="text-lg font-bold text-purple-800 mb-2 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Thông tin học tập
+                        </h3>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div class="bg-white/80 p-2 rounded-lg">
+                                <div class="text-purple-600 font-semibold">{{ getCurrentCoursesCount() }}</div>
+                                <div class="text-gray-600 text-xs">Môn đang học</div>
+                            </div>
+                            <div class="bg-white/80 p-2 rounded-lg">
+                                <div class="text-green-600 font-semibold">{{ getCurrentGPA() | number:'1.2-2' }}</div>
+                                <div class="text-gray-600 text-xs">GPA hiện tại</div>
+                            </div>
+                            <div class="bg-white/80 p-2 rounded-lg">
+                                <div class="text-blue-600 font-semibold">{{ getCompletedCredits() }}</div>
+                                <div class="text-gray-600 text-xs">Tín chỉ tích lũy</div>
+                            </div>
+                            <div class="bg-white/80 p-2 rounded-lg">
+                                <div class="text-orange-600 font-semibold">120</div>
+                                <div class="text-gray-600 text-xs">Tín chỉ cần</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- My Schedule -->
+                    <a routerLink="schedule" routerLinkActive="active"
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-purple-50 hover:to-violet-50 hover:text-purple-700 hover:shadow-md transform hover:scale-105 active:bg-purple-100">
+                        <div class="mr-3 h-8 w-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center group-hover:from-purple-600 group-hover:to-purple-700 transition-all duration-300">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <span class="group-hover:font-semibold transition-all duration-300">Thời khóa biểu</span>
+                            <div class="text-xs text-gray-500">Xem lịch học hàng tuần</div>
+                        </div>
+                    </a>
+
+                    <!-- My Grades -->
+                    <a routerLink="grades" routerLinkActive="active"
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 hover:text-green-700 hover:shadow-md transform hover:scale-105 active:bg-green-100">
+                        <div class="mr-3 h-8 w-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center group-hover:from-green-600 group-hover:to-green-700 transition-all duration-300">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <span class="group-hover:font-semibold transition-all duration-300">Bảng điểm</span>
+                            <div class="text-xs text-gray-500">Xem điểm số các môn học</div>
+                        </div>
+                    </a>
+
+                    <!-- Course Registration -->
+                    <a routerLink="registration" routerLinkActive="active"
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-700 hover:shadow-md transform hover:scale-105 active:bg-blue-100">
+                        <div class="mr-3 h-8 w-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center group-hover:from-blue-600 group-hover:to-blue-700 transition-all duration-300">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <span class="group-hover:font-semibold transition-all duration-300">Đăng ký môn học</span>
+                            <div class="text-xs text-gray-500">Đăng ký môn học mới</div>
+                        </div>
+                    </a>
+
+                    <!-- Payment -->
+                    <a routerLink="payment" routerLinkActive="active"
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50 hover:text-yellow-700 hover:shadow-md transform hover:scale-105 active:bg-yellow-100">
+                        <div class="mr-3 h-8 w-8 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center group-hover:from-yellow-600 group-hover:to-yellow-700 transition-all duration-300">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <span class="group-hover:font-semibold transition-all duration-300">Học phí</span>
+                            <div class="text-xs text-gray-500">Theo dõi thanh toán</div>
+                        </div>
+                    </a>
+
+                    <!-- Profile -->
+                    <a routerLink="profile" routerLinkActive="active"
+                       class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 hover:text-orange-700 hover:shadow-md transform hover:scale-105 active:bg-orange-100">
+                        <div class="mr-3 h-8 w-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center group-hover:from-orange-600 group-hover:to-orange-700 transition-all duration-300">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <span class="group-hover:font-semibold transition-all duration-300">Thông tin cá nhân</span>
+                            <div class="text-xs text-gray-500">Xem và cập nhật hồ sơ</div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="mt-8 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                    <h4 class="text-sm font-medium text-purple-800 mb-2">Thống kê học tập</h4>
+                    <div class="space-y-1 text-xs text-purple-600">
+                        <p>📚 Môn đang học: <span class="font-semibold">{{ getCurrentCoursesCount() }}</span></p>
+                        <p>📊 GPA hiện tại: <span class="font-semibold">{{ getCurrentGPA() | number:'1.2-2' }}</span></p>
+                        <p>🎯 Tín chỉ đã tích: <span class="font-semibold">{{ getCompletedCredits() }}</span></p>
+                    </div>
+                </div>
+
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-64 p-8 animate-fade-in">
+            <div class="max-w-7xl mx-auto">
+                <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>

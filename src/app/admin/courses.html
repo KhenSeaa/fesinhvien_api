@@ -1,0 +1,204 @@
+<div class="space-y-6 animate-fade-in">
+    <!-- Page Header -->
+    <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-orange-200 p-6 hover:shadow-md transition-shadow duration-300">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="h-12 w-12 bg-orange-600 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300">
+                    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-orange-800">📚 Quản lý môn học</h1>
+                    <p class="text-orange-600">Quản lý thông tin môn học trong hệ thống</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+                    <span class="text-sm font-medium text-orange-700">{{ courses.length }} môn học</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Actions -->
+    <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-orange-200 p-6 hover:shadow-md transition-shadow duration-300 animate-slide-in">
+        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+            <div class="flex-1 max-w-md">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <input 
+                        type="text" 
+                        [(ngModel)]="searchText" 
+                        (input)="applyFilter()"
+                        placeholder="🔍 Tìm kiếm môn học..." 
+                        class="block w-full pl-10 pr-3 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                    >
+                </div>
+            </div>
+            <button (click)="reset()" class="btn btn-secondary">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                <span>Làm mới</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-sm border border-orange-200 p-6 hover:shadow-md transition-shadow duration-300 animate-scale-in">
+        <h3 class="text-lg font-semibold text-orange-800 mb-4">
+            {{ editingId ? 'Chỉnh sửa môn học' : 'Thêm môn học mới' }}
+        </h3>
+        
+        <form (ngSubmit)="save()" class="form">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-orange-700 mb-2">
+                        🏷️ Mã môn học
+                    </label>
+                    <input 
+                        type="text" 
+                        [(ngModel)]="form.courseCode" 
+                        name="courseCode"
+                        placeholder="Nhập mã môn (VD: CS101)" 
+                        required
+                        class="w-full px-3 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                    />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-orange-700 mb-2">
+                        📖 Tên môn học
+                    </label>
+                    <input 
+                        type="text" 
+                        [(ngModel)]="form.name" 
+                        name="name" 
+                        placeholder="Nhập tên môn học"
+                        required
+                        class="w-full px-3 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-orange-700 mb-2">
+                        📅 Học kỳ
+                    </label>
+                    <select 
+                        [(ngModel)]="form.semesterId" 
+                        name="semesterId"
+                        class="w-full px-3 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300">
+                        <option [ngValue]="null">-- Không chọn --</option>
+                        <option *ngFor="let s of semesters" [ngValue]="s.id">{{ s.semester }}</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-orange-700 mb-2">
+                        🎯 Số tín chỉ
+                    </label>
+                    <input 
+                        type="number" 
+                        [(ngModel)]="form.credit" 
+                        name="credit" 
+                        placeholder="Nhập số tín chỉ"
+                        min="1" 
+                        max="6" 
+                        required
+                        class="w-full px-3 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-orange-700 mb-2">
+                        🧑‍🎓 Slot
+                    </label>
+                    <input 
+                        type="number" 
+                        [(ngModel)]="form.slot" 
+                        name="slot" 
+                        placeholder="Nhập số slot"
+                        min="0"
+                        class="w-full px-3 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-orange-700 mb-2">
+                        💰 Học phí (VNĐ)
+                    </label>
+                    <input 
+                        type="number" 
+                        [(ngModel)]="form.fee" 
+                        name="fee" 
+                        step="1000"
+                        placeholder="Nhập học phí"
+                        min="0"
+                        class="w-full px-3 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                    >
+                </div>
+            </div>
+
+            <button 
+                type="submit" 
+                class="btn btn-success mt-4 px-6 block mx-auto"
+            >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>{{ editingId ? '💾 Cập nhật' : '➕ Thêm mới' }}</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Courses Table - Simple BTL Style -->
+    <div class="data-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>🏷️ Mã môn</th>
+                    <th>📖 Tên môn học</th>
+                    <th>📅 Học kỳ</th>
+                    <th>🎯 Tín chỉ</th>
+                    <th>🧑‍🎓 Slot</th>
+                    <th>💰 Học phí</th>
+                    <th>⚙️ Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let c of filteredCourses; let i = index" (click)="selectForEdit(c)">
+                    <td><strong>{{ i + 1 }}</strong></td>
+                    <td><strong>{{ c.courseCode }}</strong></td>
+                    <td>{{ c.name }}</td>
+                    <td>{{ getSemesterName(c.semesterId ?? null) }}</td>
+                    <td>{{ c.credit }}</td>
+                    <td>{{ c.slot }}</td>
+                    <td>{{ formatCurrency(c.fee) }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-sm btn-success"
+                                (click)="$event.stopPropagation(); selectForEdit(c)">
+                                ✏️ Edit
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger"
+                                (click)="$event.stopPropagation(); remove(c.id)">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr *ngIf="filteredCourses.length === 0">
+                    <td colspan="8" class="no-data">
+                        📭 Không tìm thấy môn học nào
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,271 @@
+/* Admin Layout Styles */
+.layout {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background: #2f4050;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.brand {
+    padding: 16px 12px;
+    font-weight: 700;
+    background: #1c2833;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+}
+
+nav a {
+    color: #cfd8dc;
+    text-decoration: none;
+    padding: 12px 16px;
+}
+
+nav a.active,
+nav a:hover {
+    background: #1b2838;
+    color: #fff;
+}
+
+.content {
+    flex: 1;
+    padding: 16px;
+    background: #f4f6f8;
+    overflow: auto;
+}
+
+/* Form Styles */
+.form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form label {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+}
+
+.form input,
+.form select {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form input:focus,
+.form select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Grid/Table Styles */
+.grid {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0;
+    min-height: 240px;
+    overflow: auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.grid table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.grid th,
+.grid td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    font-size: 14px;
+}
+
+.grid thead th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+}
+
+.grid tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* Button Styles */
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background: #7c3aed;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #6d28d9;
+}
+
+.btn-success {
+    background: #059669;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #047857;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+.btn-secondary {
+    background: #ea580c;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #c2410c;
+}
+
+/* Animation Effects */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0; 
+        transform: translateX(-30px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateX(0); 
+    }
+}
+
+@keyframes slideInRight {
+    from { 
+        opacity: 0; 
+        transform: translateX(30px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateX(0); 
+    }
+}
+
+@keyframes scaleIn {
+    from { 
+        opacity: 0; 
+        transform: scale(0.95); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        transform: scale(1); 
+    }
+    50% { 
+        transform: scale(1.05); 
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.4s ease-out;
+}
+
+.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Active state for navigation */
+nav a.active {
+    background: #7c3aed;
+    color: white;
+    border-radius: 8px;
+    margin: 2px 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateX(4px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .form {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+    }
+}

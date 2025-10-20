@@ -44,7 +44,7 @@ interface ScholarshipStatistics {
     styleUrls: ['./scholarships.css']
 })
 export class AdminScholarshipsComponent implements OnInit {
-    baseUrl = 'http://localhost:8080/api/admin/enrollments';
+    baseUrl = 'https://quanlysinhvien-delta.vercel.app/api/admin/enrollments';
 
     departments: DepartmentInfo[] = [];
     semesters: SemesterInfo[] = [];

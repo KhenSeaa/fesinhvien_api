@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GeminiService {
-  private apiUrl = 'http://localhost:8080/api/gemini/chat'; // URL backend
+  private apiUrl = 'https://quanlysinhvien-delta.vercel.app/api/gemini/chat'; // URL backend
 
   constructor(private http: HttpClient) {}
 

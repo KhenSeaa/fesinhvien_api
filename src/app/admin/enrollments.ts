@@ -66,9 +66,9 @@ interface Course {
     styleUrls: ['./admin-common.css']
 })
 export class AdminEnrollmentsComponent {
-    baseUrl = 'http://localhost:8080/api/enrollments';
-    studentsUrl = 'http://localhost:8080/api/students';
-    coursesUrl = 'http://localhost:8080/api/courses';
+    baseUrl = 'https://quanlysinhvien-delta.vercel.app/api/enrollments';
+    studentsUrl = 'https://quanlysinhvien-delta.vercel.app/api/students';
+    coursesUrl = 'https://quanlysinhvien-delta.vercel.app/api/courses';
 
     enrollments: Enrollment[] = [];
     filteredEnrollments: Enrollment[] = [];

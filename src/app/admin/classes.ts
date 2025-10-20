@@ -18,7 +18,7 @@ interface ClassEntity {
     styleUrls: ['./admin-common.css']
 })
 export class AdminClassesComponent {
-    baseUrl: string = 'http://localhost:8080/api/classes';
+    baseUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/classes';
     classes: ClassEntity[] = [];
     filteredClasses: ClassEntity[] = [];
     searchText: string = '';

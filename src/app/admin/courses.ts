@@ -27,8 +27,8 @@ interface Semester {
     styleUrls: ['./admin-common.css']
 })
 export class AdminCoursesComponent {
-    baseUrl: string = 'http://localhost:8080/api/courses';
-    semestersUrl: string = 'http://localhost:8080/api/semesters';
+    baseUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/courses';
+    semestersUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/semesters';
     courses: Course[] = [];
     filteredCourses: Course[] = [];
     semesters: Semester[] = [];

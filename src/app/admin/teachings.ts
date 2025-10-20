@@ -40,10 +40,10 @@ interface ClassEntity {
     styleUrls: ['./admin-common.css']
 })
 export class AdminTeachingsComponent {
-    baseUrl: string = 'http://localhost:8080/api/teachings';
-    lecturersUrl: string = 'http://localhost:8080/api/lecturers';
-    coursesUrl: string = 'http://localhost:8080/api/courses';
-    classesUrl: string = 'http://localhost:8080/api/classes';
+    baseUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/teachings';
+    lecturersUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/lecturers';
+    coursesUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/courses';
+    classesUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/classes';
     teachings: Teaching[] = [];
     filteredTeachings: Teaching[] = [];
     lecturers: Lecturer[] = [];

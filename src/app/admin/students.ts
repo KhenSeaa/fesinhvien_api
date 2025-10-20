@@ -33,9 +33,9 @@ interface Class {
     styleUrls: ['./admin-common.css']
 })
 export class AdminStudentsComponent {
-    baseUrl: string = 'http://localhost:8080/api/students';
-    usersUrl: string = 'http://localhost:8080/api/user';
-    classesUrl: string = 'http://localhost:8080/api/classes';
+    baseUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/students';
+    usersUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/user';
+    classesUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/classes';
     students: Student[] = [];
     filteredStudents: Student[] = [];
     users: User[] = [];

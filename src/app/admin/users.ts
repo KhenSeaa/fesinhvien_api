@@ -37,10 +37,10 @@ interface Department {
     styleUrls: ['./admin-common.css']
 })
 export class AdminUsersComponent {
-    baseUrl: string = 'http://localhost:8080/api/user';
+    baseUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/user';
     users: User[] = [];
     filteredUsers: User[] = [];
-    departmentsUrl: string = 'http://localhost:8080/api/departments';
+    departmentsUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/departments';
     departments: Department[] = [];
     roles: Role[] = [
         { id: 2, name: 'ROLE_GIẢNG_VIÊN' },

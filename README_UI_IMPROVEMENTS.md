@@ -65,7 +65,7 @@ npm start
 
 ### 3. **Truy cập ứng dụng**
 - Frontend: http://localhost:4200
-- Backend: https://besinhvien-apideploy-1b0v7w.fly.dev/
+- Backend: https://besinhvien-apideploy-1b0v7w.fly.dev
 
 ### 4. **Tài khoản demo**
 - **Admin**: admin / admin123

@@ -18,7 +18,7 @@ interface ClassEntity {
     styleUrls: ['./admin-common.css']
 })
 export class AdminClassesComponent {
-    baseUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/classes';
+    baseUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev/api/classes';
     classes: ClassEntity[] = [];
     filteredClasses: ClassEntity[] = [];
     searchText: string = '';

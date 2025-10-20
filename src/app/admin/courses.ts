@@ -27,8 +27,8 @@ interface Semester {
     styleUrls: ['./admin-common.css']
 })
 export class AdminCoursesComponent {
-    baseUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/courses';
-    semestersUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/semesters';
+    baseUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev/api/courses';
+    semestersUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev/api/semesters';
     courses: Course[] = [];
     filteredCourses: Course[] = [];
     semesters: Semester[] = [];

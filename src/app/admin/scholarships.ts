@@ -44,7 +44,7 @@ interface ScholarshipStatistics {
     styleUrls: ['./scholarships.css']
 })
 export class AdminScholarshipsComponent implements OnInit {
-    baseUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/admin/enrollments';
+    baseUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev/api/admin/enrollments';
 
     departments: DepartmentInfo[] = [];
     semesters: SemesterInfo[] = [];

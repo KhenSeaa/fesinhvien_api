@@ -66,9 +66,9 @@ interface Course {
     styleUrls: ['./admin-common.css']
 })
 export class AdminEnrollmentsComponent {
-    baseUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/enrollments';
-    studentsUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/students';
-    coursesUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/courses';
+    baseUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev/api/enrollments';
+    studentsUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev/api/students';
+    coursesUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev/api/courses';
 
     enrollments: Enrollment[] = [];
     filteredEnrollments: Enrollment[] = [];

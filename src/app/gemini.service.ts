@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GeminiService {
-  private apiUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/gemini/chat'; // URL backend
+  private apiUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev/api/gemini/chat'; // URL backend
 
   constructor(private http: HttpClient) {}
 

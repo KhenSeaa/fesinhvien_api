@@ -1,6 +1,6 @@
 {
     "/api": {
-        "target": "https://besinhvien-apideploy-1b0v7w.fly.dev/",
+        "target": "https://besinhvien-apideploy-1b0v7w.fly.dev",
         "secure": false,
         "changeOrigin": true,
         "logLevel": "debug"

@@ -37,10 +37,10 @@ interface Department {
     styleUrls: ['./admin-common.css']
 })
 export class AdminUsersComponent {
-    baseUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/user';
+    baseUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev/api/user';
     users: User[] = [];
     filteredUsers: User[] = [];
-    departmentsUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/departments';
+    departmentsUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev/api/departments';
     departments: Department[] = [];
     roles: Role[] = [
         { id: 2, name: 'ROLE_GIẢNG_VIÊN' },

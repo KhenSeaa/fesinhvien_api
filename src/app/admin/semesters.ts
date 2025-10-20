@@ -17,7 +17,7 @@ interface SemesterEntity {
   styleUrls: ['./admin-common.css']
 })
 export class AdminSemestersComponent {
-  baseUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/semesters';
+  baseUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/semesters';
   semesters: SemesterEntity[] = [];
   filteredSemesters: SemesterEntity[] = [];
   searchText: string = '';

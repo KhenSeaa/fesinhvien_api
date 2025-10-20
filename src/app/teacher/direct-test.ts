@@ -73,7 +73,7 @@ export class DirectTestComponent implements OnInit {
         this.result = null;
 
         // Test direct backend connection (bypass proxy)
-        this.http.get('https://quanlysinhvien-delta.vercel.app/actuator/health', { observe: 'response' }).subscribe({
+        this.http.get('https://besinhvien-apideploy-1b0v7w.fly.dev//actuator/health', { observe: 'response' }).subscribe({
             next: (response) => {
                 this.result = {
                     success: true,

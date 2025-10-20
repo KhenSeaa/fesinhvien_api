@@ -33,9 +33,9 @@ interface Class {
     styleUrls: ['./admin-common.css']
 })
 export class AdminStudentsComponent {
-    baseUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/students';
-    usersUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/user';
-    classesUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/classes';
+    baseUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/students';
+    usersUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/user';
+    classesUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/classes';
     students: Student[] = [];
     filteredStudents: Student[] = [];
     users: User[] = [];

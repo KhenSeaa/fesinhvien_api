@@ -93,7 +93,7 @@ export class AdminPaymentsComponent implements OnInit {
     updating = false;
     loadingDetail = false;
 
-    private baseUrl = 'https://quanlysinhvien-delta.vercel.app/api/payments';
+    private baseUrl = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/payments';
     private searchTimeout: any;
 
     constructor(
@@ -143,7 +143,7 @@ export class AdminPaymentsComponent implements OnInit {
     }
 
     getAllSemesters(): Observable<SemesterInfo[]> {
-        return this.http.get<SemesterInfo[]>('https://quanlysinhvien-delta.vercel.app/api/semesters');
+        return this.http.get<SemesterInfo[]>('https://besinhvien-apideploy-1b0v7w.fly.dev//api/semesters');
     }
 
     // Component methods

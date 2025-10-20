@@ -18,7 +18,7 @@ interface Department {
   styleUrls: ['./admin-common.css']
 })
 export class AdminDepartmentsComponent {
-  baseUrl: string = 'https://quanlysinhvien-delta.vercel.app/api/departments';
+  baseUrl: string = 'https://besinhvien-apideploy-1b0v7w.fly.dev//api/departments';
   departments: Department[] = [];
   filteredDepartments: Department[] = [];
   searchText: string = '';
